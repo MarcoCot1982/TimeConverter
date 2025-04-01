@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conversión de tiempo</title>
+    <style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('https://preview.redd.it/sy6soxg2omf61.jpg?auto=webp&s=b416c9da9a4c2b3bbf41320e3b21328107843011') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+        .container {
+            background: rgb(99, 222, 191);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        select, input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hidden {
+            display: none;
+        }
+        footer {
+            font-size: 12px;
+            color: grey;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function showFields() {
+            let inputType = document.getElementById("inputType").value;
+            document.getElementById("hmmInput").classList.add("hidden");
+            document.getElementById("separateInput").classList.add("hidden");
+            document.getElementById("rangeInput").classList.add("hidden");
+
+            if (inputType === "hmm") {
+                document.getElementById("hmmInput").classList.remove("hidden");
+            } else if (inputType === "separate") {
+                document.getElementById("separateInput").classList.remove("hidden");
+            } else if (inputType === "range") {
+                document.getElementById("rangeInput").classList.remove("hidden");
+            }
+        }
+
+        function convertTime() {
+            let inputType = document.getElementById("inputType").value;
+            let workHoursEnabled = document.getElementById("workHoursToggle").checked;
+            let workHours = workHoursEnabled ? document.getElementById("workHours").value : null;
+            let timeValue = document.getElementById("timeValue").value;
+            let hours = document.getElementById("hours").value;
+            let minutes = document.getElementById("minutes").value;
+            let start = document.getElementById("start").value;
+            let end = document.getElementById("end").value;
+
+            google.script.run.withSuccessHandler(function(result) {
+                document.getElementById("result").innerText = result;
+            }).convertTime(inputType, timeValue, hours, minutes, start, end, workHours);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Convertidor de tiempo</h2>
+
+        <!-- Dropdown for input type selection -->
+        <label for="inputType">Seleccionar tipo de entrada:</label>
+        <select id="inputType" onchange="showFields()">
+            <option value="hmm">hh:mm</option>
+            <option value="separate">Horas y minutos por separado</option>
+            <option value="range">Inicio y fin</option>
+        </select>
+
+        <!-- Input Fields (Initially Hidden) -->
+        <div id="hmmInput" class="hidden">
+            <label for="timeValue">Introducir tiempo (h:mm):</label>
+            <input type="text" id="timeValue" placeholder="e.g., 1:15">
+        </div>
+
+        <div id="separateInput" class="hidden">
+            <label for="hours">Horas:</label>
+            <input type="number" id="hours" placeholder="e.g., 1">
+            <label for="minutes">Minutos:</label>
+            <input type="number" id="minutes" placeholder="e.g., 15">
+        </div>
+
+        <div id="rangeInput" class="hidden">
+            <label for="start">Inicio:</label>
+            <input type="text" id="start" placeholder="e.g., 08:00">
+            <label for="end">Fin:</label>
+            <input type="text" id="end" placeholder="e.g., 17:00">
+        </div>
+
+        <!-- Work Hours Toggle -->
+        <label>
+            <input type="checkbox" id="workHoursToggle" checked> Horas jornada laboral <br> (deseleccionar si no aplica)
+        </label>
+        <select id="workHours">
+            <option value="8" selected>8</option>
+            <option value="7">7</option>
+            <option value="6">6</option>
+            <option value="5">5</option>
+            <option value="4">4</option>
+        </select>
+
+        <button onclick="convertTime()">Convert</button>
+
+        <p id="result"></p>
+
+      <footer style="font-size: 12px; color: grey; text-align: center; margin-top: 20px;">
+     by Marco Cot, 2025 <br> <br> Aviso: esta no es una aplicación corporativa <br> Usar unicamente por referencia
+      </footer>
+    </div>
+
+    <script>
+        //Ensure default input selection is visible on load
+        showFields();
+    </script>
+
+
+
+</body>
+</html>
